@@ -5,18 +5,17 @@ import Container from "@/components/ui/container";
 import NoResults from "@/components/ui/no-results";
 import ProductCard from "@/components/ui/product-card";
 
-interface CategoryPageProps {
-  params: {
-    categoryId: string;
-  };
-}
-
-const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
+export default async function CategoryPage({
+  params,
+}: {
+  params: Promise<{ categoryId: string }>;
+}) {
+  const { categoryId } = await params;
   const products = await getProducts({
-    categoryId: params.categoryId,
+    categoryId: categoryId,
   });
 
-  const category = await getCategory(params.categoryId);
+  const category = await getCategory(categoryId);
   return (
     <div className="bg-white">
       <Container>
@@ -34,6 +33,4 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
       </Container>
     </div>
   );
-};
-
-export default CategoryPage;
+}
