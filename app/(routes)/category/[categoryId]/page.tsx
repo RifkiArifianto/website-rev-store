@@ -11,16 +11,12 @@ interface CategoryPageProps {
   };
 }
 
-const CategoryPage = async ({ params }: CategoryPageProps) => {
-  // Tunggu params untuk di-parse dulu
-  const { categoryId } = await params;
-
+const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
   const products = await getProducts({
-    categoryId: categoryId,
+    categoryId: params.categoryId,
   });
 
-  const category = await getCategory(categoryId);
-
+  const category = await getCategory(params.categoryId);
   return (
     <div className="bg-white">
       <Container>
@@ -39,34 +35,5 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
     </div>
   );
 };
-
-export async function generateStaticParams(): Promise<
-  { categoryId: string }[]
-> {
-  console.log("ENV URL:", process.env.PUBLIC_API_URL); // Debug di sini
-
-  try {
-    const res = await fetch(`${process.env.PUBLIC_API_URL}/categories`);
-
-    if (!res.ok) {
-      console.error("Failed to fetch categories:", res.statusText);
-      return [];
-    }
-
-    const categoriesData = await res.json();
-
-    if (Array.isArray(categoriesData)) {
-      return categoriesData.map((category) => ({
-        categoryId: category.id,
-      }));
-    }
-
-    console.error("Unexpected categories data format:", categoriesData);
-    return [];
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-    return [];
-  }
-}
 
 export default CategoryPage;
