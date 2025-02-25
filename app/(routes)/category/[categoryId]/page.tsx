@@ -12,11 +12,15 @@ interface CategoryPageProps {
 }
 
 const CategoryPage = async ({ params }: CategoryPageProps) => {
+  // Tunggu params untuk di-parse dulu
+  const { categoryId } = await params;
+
   const products = await getProducts({
-    categoryId: params.categoryId,
+    categoryId: categoryId,
   });
 
-  const category = await getCategory(params.categoryId);
+  const category = await getCategory(categoryId);
+
   return (
     <div className="bg-white">
       <Container>
@@ -36,7 +40,11 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
   );
 };
 
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<
+  { categoryId: string }[]
+> {
+  console.log("ENV URL:", process.env.PUBLIC_API_URL); // Debug di sini
+
   try {
     const res = await fetch(`${process.env.PUBLIC_API_URL}/categories`);
 
