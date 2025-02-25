@@ -36,4 +36,29 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
   );
 };
 
+export async function generateStaticParams() {
+  try {
+    const res = await fetch(`${process.env.PUBLIC_API_URL}/categories`);
+
+    if (!res.ok) {
+      console.error("Failed to fetch categories:", res.statusText);
+      return [];
+    }
+
+    const categoriesData = await res.json();
+
+    if (Array.isArray(categoriesData)) {
+      return categoriesData.map((category) => ({
+        categoryId: category.id,
+      }));
+    }
+
+    console.error("Unexpected categories data format:", categoriesData);
+    return [];
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return [];
+  }
+}
+
 export default CategoryPage;
