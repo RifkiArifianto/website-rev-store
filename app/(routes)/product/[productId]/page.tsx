@@ -6,10 +6,10 @@ import ProductList from "@/components/product-list";
 import Container from "@/components/ui/container";
 
 interface ProductPageProps {
-  params: { productId: string }; // Tidak perlu Promise
+  params: { productId: string };
 }
 
-const ProductPage = async ({ params }: ProductPageProps) => {
+export default async function ProductPage({ params }: ProductPageProps) {
   const product = await getProduct(params.productId);
   const suggestedProducts = await getProducts({
     categoryId: product?.category?.id,
@@ -31,6 +31,4 @@ const ProductPage = async ({ params }: ProductPageProps) => {
       </Container>
     </div>
   );
-};
-
-export default ProductPage;
+}
