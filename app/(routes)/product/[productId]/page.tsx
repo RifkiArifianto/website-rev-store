@@ -5,12 +5,13 @@ import Info from "@/components/info";
 import ProductList from "@/components/product-list";
 import Container from "@/components/ui/container";
 
-interface ProductPageProps {
-  params: { productId: string };
-}
-
-export default async function ProductPage({ params }: ProductPageProps) {
-  const product = await getProduct(params.productId);
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ productId: string }>;
+}) {
+  const { productId } = await params;
+  const product = await getProduct(productId);
   const suggestedProducts = await getProducts({
     categoryId: product?.category?.id,
   });
